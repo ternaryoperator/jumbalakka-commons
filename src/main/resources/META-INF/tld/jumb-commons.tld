@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+  								"http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>jumbCommons</short-name>
+	<uri>http://com.jumbalakka.commons/taglib/jumb-commons</uri>
+	
+	<tag>
+		<name>checkUserSession</name>
+		<tag-class>com.jumbalakka.commons.web.tag.JumbalakkaCheckUserSession</tag-class>
+		<description>Will check user session if does not exists skips body</description>
+	</tag>
+	
+	<tag>
+		<name>userFeedback</name>
+		<tag-class>com.jumbalakka.commons.web.tag.ui.JumbalakkaUserFeedbackTag</tag-class>
+		<description>Will print any error message or info message if any. No session check performed</description>
+	</tag>
+</taglib>            

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 2, 2012 3:05:15 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="com.jumbalakka.commons.file.types.JumbalakkaFile" table="JUMB_FILE">
+  <id name="id" type="int">
+   <column name="JUMB_ID"/>
+   <generator class="identity"/>
+  </id>
+  <property generated="never" lazy="false" name="orignalFileName" type="java.lang.String">
+   <column length="255" name="JUMB_ORIGNALFILENAME"/>
+  </property>
+  <property generated="never" lazy="false" name="newFileName" type="java.lang.String">
+   <column length="500" name="JUMB_NEWFILENAME"/>
+  </property>
+  <property generated="never" lazy="false" name="fileUpload" type="java.util.Date">
+   <column name="JUMB_FILEUPLOAD"/>
+  </property>
+  <property generated="never" lazy="false" name="comment" type="java.lang.String">
+   <column length="1000" name="JUMB_COMMENT"/>
+  </property>
+  <property generated="never" lazy="false" name="domain" type="java.lang.String">
+   <column length="20" name="JUMB_DOMAIN"/>
+  </property>
+  <property generated="never" lazy="false" name="status" type="java.lang.String">
+   <column length="15" name="JUMB_STATUS"/>
+  </property>
+  <property column="JUMB_USERID" generated="never" lazy="false"
+   length="20" name="uploadedBy" type="string"/>
+  <property column="JUMB_SECURITY" generated="never" lazy="false"
+   length="20" name="security" type="string"/>
+  <property column="JUMB_CATALOG" generated="never" lazy="false"
+   length="20" name="catalog" type="string"/>
+  <property name="securityType" length="20" />
+  <property name="fileStatus" length="20" />
+ </class>
+</hibernate-mapping>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 31, 2012 10:27:16 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.jumbalakka.commons.security.types.JumbalakkaUser"
+		table="JUMB_USER">
+		<id name="userId" type="java.lang.String">
+			<column length="20" name="JUMB_USERID" not-null="true" />
+			<generator class="assigned" />
+		</id>
+		<property generated="never" lazy="false" name="password"
+			type="java.lang.String">
+			<column length="300" name="JUMB_PASSWORD" />
+		</property>
+		<property generated="never" lazy="false" name="email"
+			type="java.lang.String">
+			<column length="300" name="JUMB_EMAIL" />
+		</property>
+		<property generated="never" lazy="false" name="status"
+			type="java.lang.String">
+			<column length="15" name="JUMB_STATUS" />
+		</property>
+		<property column="JUMB_DOMAIN" name="domain" type="string"
+			length="20" />
+	</class>
+</hibernate-mapping>
