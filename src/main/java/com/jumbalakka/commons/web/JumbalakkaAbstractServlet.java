@@ -3,6 +3,8 @@ package com.jumbalakka.commons.web;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,24 +19,21 @@ import com.jumbalakka.commons.web.servlet.JumbalakkaLogonServlet;
 public abstract class JumbalakkaAbstractServlet extends HttpServlet implements JumbalakkaCommonWeb
 {
 	protected Log logger = LogFactory.getLog( this.getClass() );
-    private HttpServletRequest request;
-    private HttpServletResponse response;
-    private JumbalakkaUser user;
     
-	protected void setErrorMessage( String message )
+	protected void setErrorMessage( HttpServletRequest request, String message )
 	{
-		setRequestAttribute( REQ_ERROR_MSG, message );
+		setRequestAttribute( request, REQ_ERROR_MSG, message );
 	}
 	
-	protected void setInfoMessage( String message )
+	protected void setInfoMessage( HttpServletRequest request, String message )
 	{
-		setRequestAttribute( REQ_INFO_MSG, message );
+		setRequestAttribute( request, REQ_INFO_MSG, message );
 	}
 	
-	protected void appendErrorMessage( String message )
+	protected void appendErrorMessage( HttpServletRequest request, String message )
 	{
 		String errorMessage = StringUtils.defaultString( 
-						getRequestAttribute( REQ_ERROR_MSG, String.class ) );
+						getRequestAttribute( request, REQ_ERROR_MSG, String.class ) );
 		if( StringUtils.isNotBlank( errorMessage ) )
 		{
 			errorMessage += "<br/>" + message;
@@ -44,13 +43,13 @@ public abstract class JumbalakkaAbstractServlet extends HttpServlet implements J
 			errorMessage = message;
 		}
 		
-		setErrorMessage( errorMessage );
+		setErrorMessage( request, errorMessage );
 	}
 	
-	protected void appendInfoMessage( String message )
+	protected void appendInfoMessage( HttpServletRequest request, String message )
 	{
 		String infoMessage = StringUtils.defaultString( 
-						getRequestAttribute( REQ_INFO_MSG, String.class ) );
+						getRequestAttribute( request, REQ_INFO_MSG, String.class ) );
 		if( StringUtils.isNotBlank( infoMessage ) )
 		{
 			infoMessage += "<br/>" + message;
@@ -60,58 +59,12 @@ public abstract class JumbalakkaAbstractServlet extends HttpServlet implements J
 			infoMessage = message;
 		}
 		
-		setInfoMessage( infoMessage );
+		setInfoMessage( request, infoMessage );
 	}
 	
-	protected void checkUserSession() throws ServletException
+	protected <T> T getSessionAttribute( HttpSession session, String attrKey, Class< T > clazz )
 	{
-    	Boolean sessionChecked = getRequestAttribute( USES_SESSION_HAS_BEEN_CHECKED, Boolean.class );
-    	if( sessionChecked == null || sessionChecked == false )
-    	{
-			user = getSessionAttribute( USER_SESSION, JumbalakkaUser.class );
-    	}
-    	else
-    	{
-    		user = getRequestAttribute( USER_SESSION, JumbalakkaUser.class );
-    	}
-    	
-    	if( user == null )
-		{
-			throw new ServletException( "Not an authorized user" );
-		}
-	}
-    
-	public JumbalakkaUser getUser()
-	{
-    	try
-		{
-			checkUserSession();
-		}
-		catch ( ServletException e )
-		{
-			return null;
-		}
-    	return user;
-	}
-	
-	protected HttpServletRequest getRequest()
-	{
-		return request;
-	}
-	
-	protected HttpServletResponse getResponse()
-	{
-		return response;
-	}
-	
-	protected HttpSession getSession()
-	{
-		return request.getSession();
-	}
-	
-	protected <T> T getSessionAttribute( String attrKey, Class< T > clazz )
-	{
-		Object obj = getSession().getAttribute( attrKey );
+		Object obj = session.getAttribute( attrKey );
 		if( obj != null && clazz.isInstance( obj ) )
 		{
 			return clazz.cast( obj );
@@ -119,9 +72,9 @@ public abstract class JumbalakkaAbstractServlet extends HttpServlet implements J
 		return null;
 	}
 	
-	protected <T> T getRequestAttribute( String attrKey, Class< T > clazz )
+	protected <T> T getRequestAttribute( HttpServletRequest request, String attrKey, Class< T > clazz )
 	{
-		Object obj = getRequest().getAttribute( attrKey );
+		Object obj = request.getAttribute( attrKey );
 		if( obj != null && clazz.isInstance( obj ) )
 		{
 			return clazz.cast( obj );
@@ -129,40 +82,32 @@ public abstract class JumbalakkaAbstractServlet extends HttpServlet implements J
 		return null;
 	}
 	
-	protected void setSessionAttribute( String attrKey, Object value )
+	protected void setSessionAttribute( HttpSession session,String attrKey, Object value )
 	{
-		getSession().setAttribute( attrKey, value );
+		session.setAttribute( attrKey, value );
 	}
 	
-	protected void setRequestAttribute( String attrKey, Object value )
+	protected void setRequestAttribute( HttpServletRequest request, String attrKey, Object value )
 	{
-		getRequest().setAttribute( attrKey, value );
+		request.setAttribute( attrKey, value );
 	}
 	
-	protected void doRedirect( String url ) throws IOException
+	protected void doRedirect( HttpServletResponse response, String url ) throws IOException
 	{
-		getResponse().sendRedirect( url );
+		response.sendRedirect( url );
 	}
 	
-	protected void doForward( String url ) throws ServletException, IOException 
+	protected void doForward( HttpServletRequest request, 
+			HttpServletResponse response, String url ) throws ServletException, IOException 
 	{
-		RequestDispatcher dispatcher = getRequest().getRequestDispatcher( url );
-	    dispatcher.forward( getRequest() , getResponse() );
-	}
-	
-	private void setVariables( 
-			HttpServletRequest request,
-			HttpServletResponse response )
-	{
-		this.request = request;
-		this.response = response;
+		RequestDispatcher dispatcher = request.getRequestDispatcher( url );
+	    dispatcher.forward( request , response );
 	}
 	
 	@Override
 	protected void doGet( HttpServletRequest req, HttpServletResponse resp )
 			throws ServletException, IOException
 	{
-		setVariables( req, resp );
 		jumbDoGet( req, resp );
 	}
 
@@ -173,7 +118,6 @@ public abstract class JumbalakkaAbstractServlet extends HttpServlet implements J
 	protected void doPost( HttpServletRequest req, HttpServletResponse resp )
 			throws ServletException, IOException
 	{
-		setVariables( req, resp );
 		jumbDoPost( req, resp );
 	}
 

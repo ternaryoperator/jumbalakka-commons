@@ -33,7 +33,8 @@ public class JumbalakkaServletActionProcessor extends JumbalakkaAbstractServlet
 	protected void jumbDoGet( HttpServletRequest req, HttpServletResponse resp )
 			throws ServletException, IOException
 	{
-		throw new ServletException( "Operation not supported" );
+		//throw new ServletException( "Operation not supported" );
+		jumbDoPost( req, resp );
 	}
 
 	@Override
@@ -55,7 +56,7 @@ public class JumbalakkaServletActionProcessor extends JumbalakkaAbstractServlet
 			throw new ServletException( "No corresponding page has been defined for this event" );
 		}
 		
-		doForward( newEvent );
+		doForward( req, resp, newEvent );
 	}
 	
 	

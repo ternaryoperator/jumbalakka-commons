@@ -46,7 +46,7 @@ public abstract class JumbalakkaFileUploadServlet extends JumbalakkaAbstractServ
 	protected void jumbDoPost( HttpServletRequest req, HttpServletResponse resp )
 			throws ServletException, IOException
 	{
-		checkUserSession();
+		//checkUserSession();
 		
 		try
 		{
@@ -63,19 +63,19 @@ public abstract class JumbalakkaFileUploadServlet extends JumbalakkaAbstractServ
 		}
 		catch ( JumbalakkaFileUploadException e )
 		{
-			setErrorMessage( e.getMessage() );
-			doForward( onErrorForwardUrl );
+			setErrorMessage( req, e.getMessage() );
+			doForward( req, resp, onErrorForwardUrl );
 			return;
 		}
 		catch ( JumbalakkaException e )
 		{
-			setErrorMessage( e.getMessage() );
-			doForward( onErrorForwardUrl );
+			setErrorMessage( req, e.getMessage() );
+			doForward( req, resp, onErrorForwardUrl );
 			return;
 		}
 		
-		setInfoMessage( "Upload was successful" );
-		doForward( onSucessForwardUrl );
+		setInfoMessage( req, "Upload was successful" );
+		doForward( req, resp, onSucessForwardUrl );
 		
 	}
 	
