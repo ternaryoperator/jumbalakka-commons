@@ -12,4 +12,6 @@ public interface TupleDAO
 	public List< Tuple > getByType( String type );
 	public List<Tuple> getByFilter( String type, String key );
 	public void delete( Tuple t );
+	public List<Tuple> getAll();
+	public Tuple getById( int id );
 }

@@ -41,4 +41,22 @@ public class TupleDAOImpl extends HibernateDaoSupport implements TupleDAO
 	{
 		getHibernateTemplate().delete( t );
 	}
+
+	public List<Tuple> getAll()
+	{
+		DetachedCriteria criteria = DetachedCriteria.forClass( Tuple.class );
+		return getHibernateTemplate().findByCriteria( criteria );
+	}
+
+	public Tuple getById( int id )
+	{
+		DetachedCriteria criteria = DetachedCriteria.forClass( Tuple.class );
+		criteria.add( Restrictions.eq( "id", id ) );
+		List<Tuple> tuples = getHibernateTemplate().findByCriteria( criteria );
+		if( tuples.isEmpty() )
+		{
+			return null;
+		}
+		return tuples.get( 0 );
+	}
 }
